@@ -1,0 +1,249 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-04 14:28+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "200 success"
+msgstr "成功回應（200）"
+
+msgid "204 no data"
+msgstr "很抱歉，系統查不到您要的資料，請問您還有其他問題嗎？"
+
+msgid "401 no permission"
+msgstr "很抱歉，您沒有權限查看相關的資料。"
+
+msgid "422 parameter error"
+msgstr "查詢參數錯誤（422）"
+
+#, python-brace-format
+msgid "ALIS: ({0} - {1}) ({2}) -> ({3})"
+msgstr ""
+
+#, python-brace-format
+msgid "Authentication failed: {0}."
+msgstr "認證失敗，伺服器錯誤：{0}"
+
+msgid "Authentication service is not available now. Please try again later."
+msgstr "認證伺服器沒有回應，請稍候再試。"
+
+#, python-brace-format
+msgid "DA of {0}"
+msgstr "{0} 的 DA"
+
+msgid "Declining ( >26wks)"
+msgstr "衰退期 ( >26wks)"
+
+msgid "Error querying ABC"
+msgstr "查詢 ABC 時發生了錯誤。"
+
+msgid "Error querying ALIS"
+msgstr "查詢 ALIS 時發生了錯誤。"
+
+msgid "Fail to get ABC response"
+msgstr "ABC 服務沒有回應。請稍候重試。"
+
+msgid "Fail to get ALIS response"
+msgstr "ALIS 服務沒有回應。請稍候重試。"
+
+msgid "Fail to parse ABC response"
+msgstr "解析 ABC 的回應時出現了錯誤。"
+
+#, python-brace-format
+msgid "Fail to parse ALIS response: {0} ({1})"
+msgstr "解析 ALIS 的回應時出現了錯誤：{0}（{1}）"
+
+msgid "Green light"
+msgstr "綠燈"
+
+msgid "Invalid or empty token."
+msgstr "認證失敗，空白或不合法的權杖。"
+
+#, python-brace-format
+msgid "Me: {0}"
+msgstr ""
+
+msgid "Note: query country/region is global."
+msgstr "注意：查詢範圍為全球"
+
+#, python-brace-format
+msgid "Note: query date adjusted to ({0} - {1}.)"
+msgstr "注意：查詢日期調整為 {0} - {1}"
+
+msgid "Plateau (11wks-26wks)"
+msgstr "高原期 (11wks-26wks)\t"
+
+msgid "Please enter your question"
+msgstr "請輸入問句。"
+
+msgid "Please give me some feedbacks."
+msgstr "以上資料是否正確？"
+
+#, python-brace-format
+msgid "Query date: {0} - {1}."
+msgstr "查詢日期為 {0} - {1}"
+
+msgid "Red light"
+msgstr "紅燈"
+
+msgid "Related questions"
+msgstr "提供您更多的相關問題。"
+
+#, python-brace-format
+msgid ""
+"Request: \n"
+"{0}\n"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Response: \n"
+"{0}"
+msgstr ""
+
+msgid "Rising (1st 10 wks)"
+msgstr "爬升期 (1st 10 wks)"
+
+msgid "Show command tips"
+msgstr "查看提問技巧"
+
+msgid "Sorry, I don't understand what you just said."
+msgstr "很抱歉，我不太明白您的意思。"
+
+msgid "Sorry, there is no data for more than 14 days ago."
+msgstr "很抱歉，系統沒有 14 天前的資料。"
+
+#, python-brace-format
+msgid "Test ABC with Question({0}), status({1} - {2})"
+msgstr ""
+
+msgid "Thanks for the feedback."
+msgstr "感謝您的回饋。"
+
+msgid "Token expired."
+msgstr "認證失敗，權杖已過期。"
+
+#, python-brace-format
+msgid ""
+"Unable to find future information.\n"
+"Note: query date is {0} - {1}"
+msgstr ""
+"無法查詢未來的資料喔。\n"
+"注意：查詢日期為 {0} - {1}"
+
+#, python-brace-format
+msgid "Unknown status: {0}."
+msgstr "認證失敗，發生未知錯誤：{0}"
+
+msgid "Valid token."
+msgstr "認證成功。"
+
+msgid "Yellow light"
+msgstr "黃燈"
+
+#, python-brace-format
+msgid "[{0}/{1}]"
+msgstr ""
+
+#, python-brace-format
+msgid "[{0}/{1}] ({2}) ({3}) -> ({4})"
+msgstr ""
+
+#, python-brace-format
+msgid "[{0}/{1}] {2}"
+msgstr ""
+
+msgid "asking for future feedbacks"
+msgstr ""
+"[\"您的寶貴意見將是我進步的動力。\", \"回饋問題將讓我更聰明。"
+"\", \"請幫幫我 ^ ^ 讓我更聰明。\", \"我還在學習，請給我回饋教教我。\"]"
+
+msgid "command tips"
+msgstr ""
+"[\"台灣 ZF5 昨日的激活量\", \"台灣 ZF5 上週的出貨量\", \"台灣 ZF5 RR 亮紅燈"
+"的 Model\", \"比較 ZE620KL 在台灣和日本的週激活量\"]"
+
+msgid "cumulative activation"
+msgstr "目前累積激活量"
+
+msgid "good answer"
+msgstr "答案正確"
+
+msgid "irrelevant answer"
+msgstr "答案不相關"
+
+msgid "last week ASP"
+msgstr "上週的 ASP"
+
+msgid "last week WA"
+msgstr "上週的 WA"
+
+msgid "suggestions for 100x"
+msgstr ""
+"[\"{0} {1} 上週和上上週激活量的比較\", \"{0} {1} 昨日與 7 日前激活量的比較"
+"\", \"{0} {1} 顏色的累積銷售分布\", \"{0} {1} performance 如何\"]"
+
+msgid "suggestions for 200x"
+msgstr "[\"比較{0} {1} 和 {2} 的銷售表現\"]"
+
+#, python-brace-format
+msgid "tips part one {0}"
+msgstr ""
+"{0} 您好，我可以提供的資料可以依地區譬如台灣，依 Segment 譬如 ZF5，依 "
+"Subsegment 譬如 ZF5 Max，或依型號譬如 ZE620KL 來詢問我來獲得 [激活量]/[DA]、"
+"[庫存數據]/[S-A]、[Run Rate]/[RR]等資料。"
+
+msgid "tips part two"
+msgstr ""
+"您可以把 ZE620KL 換成其他產品譬如 NB，或是換型號譬如 UX430，或是把台灣換成其"
+"他國家地區。"
+
+#, python-brace-format
+msgid "welcome part one {0}"
+msgstr ""
+"{0} 您好，我叫 ALIS，您的數據助理。我可以回答 iReport 報表所提供的數據，很高"
+"興為您服務。"
+
+msgid "welcome part two"
+msgstr ""
+"您可以直接輸入您想問的問題，例如: 台灣 ZF5 上週的激活量。或點選下列問題得到您"
+"要的答案。"
+
+msgid "welcome tips"
+msgstr ""
+"[\"台灣 ZE620KL 昨日的激活量\", \"台灣 ZE620KL 上週的出貨量\", \"比較台灣和日"
+"本 ZE620KL 的週激活量\"]"
+
+msgid "wrong data answer"
+msgstr "數據有問題"
+
+#, python-brace-format
+msgid ""
+"{0}\n"
+"{1}"
+msgstr ""
+
+#, python-brace-format
+msgid "{0} not defined"
+msgstr "尚未定義的錯誤（{0}）"
+
+#, python-brace-format
+msgid "{0} of "
+msgstr "的 {0}"
+
+#, python-brace-format
+msgid "{0}: {1}"
+msgstr ""

@@ -1,0 +1,231 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-04 14:28+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "200 success"
+msgstr ""
+
+msgid "204 no data"
+msgstr ""
+"Sorry, system can not find the desired data. Do you have any other question?"
+
+msgid "401 no permission"
+msgstr "Sorry, you don't have permission to access the data."
+
+msgid "422 parameter error"
+msgstr ""
+
+#, python-brace-format
+msgid "ALIS: ({0} - {1}) ({2}) -> ({3})"
+msgstr ""
+
+#, python-brace-format
+msgid "Authentication failed: {0}."
+msgstr ""
+
+msgid "Authentication service is not available now. Please try again later."
+msgstr ""
+
+#, python-brace-format
+msgid "DA of {0}"
+msgstr ""
+
+msgid "Declining ( >26wks)"
+msgstr ""
+
+msgid "Error querying ABC"
+msgstr ""
+
+msgid "Error querying ALIS"
+msgstr ""
+
+msgid "Fail to get ABC response"
+msgstr ""
+
+msgid "Fail to get ALIS response"
+msgstr ""
+
+msgid "Fail to parse ABC response"
+msgstr ""
+
+#, python-brace-format
+msgid "Fail to parse ALIS response: {0} ({1})"
+msgstr ""
+
+msgid "Green light"
+msgstr ""
+
+msgid "Invalid or empty token."
+msgstr ""
+
+#, python-brace-format
+msgid "Me: {0}"
+msgstr ""
+
+msgid "Note: query country/region is global."
+msgstr ""
+
+#, python-brace-format
+msgid "Note: query date adjusted to ({0} - {1}.)"
+msgstr ""
+
+msgid "Plateau (11wks-26wks)"
+msgstr ""
+
+msgid "Please enter your question"
+msgstr ""
+
+msgid "Please give me some feedbacks."
+msgstr ""
+
+#, python-brace-format
+msgid "Query date: {0} - {1}."
+msgstr ""
+
+msgid "Red light"
+msgstr ""
+
+msgid "Related questions"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Request: \n"
+"{0}\n"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Response: \n"
+"{0}"
+msgstr ""
+
+msgid "Rising (1st 10 wks)"
+msgstr ""
+
+msgid "Show command tips"
+msgstr ""
+
+msgid "Sorry, I don't understand what you just said."
+msgstr ""
+
+msgid "Sorry, there is no data for more than 14 days ago."
+msgstr ""
+
+#, python-brace-format
+msgid "Test ABC with Question({0}), status({1} - {2})"
+msgstr ""
+
+msgid "Thanks for the feedback."
+msgstr ""
+
+msgid "Token expired."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Unable to find future information.\n"
+"Note: query date is {0} - {1}"
+msgstr ""
+
+#, python-brace-format
+msgid "Unknown status: {0}."
+msgstr ""
+
+msgid "Valid token."
+msgstr ""
+
+msgid "Yellow light"
+msgstr ""
+
+#, python-brace-format
+msgid "[{0}/{1}]"
+msgstr ""
+
+#, python-brace-format
+msgid "[{0}/{1}] ({2}) ({3}) -> ({4})"
+msgstr ""
+
+#, python-brace-format
+msgid "[{0}/{1}] {2}"
+msgstr ""
+
+msgid "asking for future feedbacks"
+msgstr ""
+
+msgid "command tips"
+msgstr ""
+
+msgid "cumulative activation"
+msgstr ""
+
+msgid "good answer"
+msgstr ""
+
+msgid "irrelevant answer"
+msgstr ""
+
+msgid "last week ASP"
+msgstr ""
+
+msgid "last week WA"
+msgstr ""
+
+msgid "suggestions for 100x"
+msgstr ""
+
+msgid "suggestions for 200x"
+msgstr ""
+
+#, python-brace-format
+msgid "tips part one {0}"
+msgstr ""
+
+msgid "tips part two"
+msgstr ""
+
+#, python-brace-format
+msgid "welcome part one {0}"
+msgstr ""
+
+msgid "welcome part two"
+msgstr ""
+
+msgid "welcome tips"
+msgstr ""
+
+msgid "wrong data answer"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"{0}\n"
+"{1}"
+msgstr ""
+
+#, python-brace-format
+msgid "{0} not defined"
+msgstr ""
+
+#, python-brace-format
+msgid "{0} of "
+msgstr ""
+
+#, python-brace-format
+msgid "{0}: {1}"
+msgstr ""
