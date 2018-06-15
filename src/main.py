@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 from handlers.YTHandler import YTHandler
 from jinja2 import FileSystemLoader
 
-DIRECTORY_WEBSITE_ALIS = 'alis-website'
+DIRECTORY_WEBSITE = 'www'
 
 app = Flask(__name__)
 db = None
@@ -31,32 +31,38 @@ def setup():
 
 def init_database(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#     app.config['SQLALCHEMY_DATABASE_URI'] = rc.get_sqlalchemy_database_uri('config/db.ini', server)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foo.db'
     global db
     db = SQLAlchemy(app)
 
     # create all tables if not exist
     # classes must be included and declared before create_all()
     from models.Base import Base
+    from models.DLItem import DLItem
     Base.metadata.create_all(bind=db.engine)
 
 def init_jinja():
-    app.jinja_loader = FileSystemLoader([DIRECTORY_WEBSITE_ALIS])
+    app.jinja_loader = FileSystemLoader([DIRECTORY_WEBSITE])
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
 @app.route('/')
 def index():
-    return send_from_directory(DIRECTORY_WEBSITE_ALIS, 'index.html')
+    return send_from_directory(DIRECTORY_WEBSITE, 'index.html')
 
 @app.route('/<path:path>')
 def send_main(path):
-    return send_from_directory(DIRECTORY_WEBSITE_ALIS, path)
+    return send_from_directory(DIRECTORY_WEBSITE, path)
 
-@app.route('/download', methods=['GET', 'POST'])
-def start_download():
+@app.route('/new', methods=['GET', 'POST'])
+def new_download():
     req = YTHandler.parse_args(request, app, db, logWorker)
-    return YTHandler.start_download(req)
+    return YTHandler.download(req)
+
+@app.route('/list', methods=['GET', 'POST'])
+def list_downloads():
+    req = YTHandler.parse_args(request, app, db, logWorker)
+    return YTHandler.list_downloads(req)
 
 @app.after_request
 def add_header(r):
