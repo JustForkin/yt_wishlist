@@ -21,11 +21,14 @@ class YTHandler(object):
         req.app = app
         req.db = db
         req.logWorker = logWorker
-        req.url = 'https://www.youtube.com/watch?v=GsuVbN-XMjA'
+        req.url = args.get('url')
         return req
 
     @staticmethod
     def download(req):
+        # check if url is valid
+        # check if duplicated, if true, start again or return cached one?
+
         # create ticket
         reqId = YTHandler._add_dl_item(req)
         if reqId is None:

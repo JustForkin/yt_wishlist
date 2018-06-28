@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy
 from handlers.YTHandler import YTHandler
 from jinja2 import FileSystemLoader
 
-DIRECTORY_WEBSITE = 'www'
+DIRECTORY_WEBSITE = '../www'
 
 app = Flask(__name__)
 db = None
