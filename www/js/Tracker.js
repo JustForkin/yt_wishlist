@@ -5,6 +5,7 @@ define(function(require) {
     _ = require('underscore');
     var APIManager = require('APIManager');
     var Card = require('text!views/card.html');
+    var utils = require('Utils');
 
     // ------------------------------------------------------------------------
     // CONSTRUCTOR
@@ -15,14 +16,14 @@ define(function(require) {
         }
 
         var cardEl = $(_.template(Card)());
-        containerEl.append(cardEl);
+        containerEl.prepend(cardEl);
 
         // hold views
-        var dlButton = cardEl.find('a.btn').first();
-        this._dlButton = dlButton;
+        this._dlButton = cardEl.find('a.btn').first();
+        this._progressBar = cardEl.find('.progress-bar').first();
 
         // start polling
-        this.polling();
+        this._pollTimeout = this.polling();
         this._accPollTime = 0;
 
         this._reqId = reqId;
@@ -43,26 +44,54 @@ define(function(require) {
         polling: function() {
             console.log('Polling, accumulated time: ' + this._accPollTime);
             var that = this;
-            setTimeout(function() {
+            return setTimeout(function() {
                 // real works here
                 that.doPolling();
                 
                 // polling logics
                 that._accPollTime += Tracker.POLL_INTERVAL;
                 if (that._accPollTime <= Tracker.MAX_POLL_TIME) {
-                    that.polling();
+                    that._pollTimeout = that.polling();
                 }
             }, Tracker.POLL_INTERVAL);
         },
 
         doPolling: function() {
-            APIManager.listDownload(this._reqId).done(function(data, status) {
+            APIManager.listDownload(this._reqId, this).done(function(data, status) {
                 console.log('List download for: ' + this._reqId);
-                console.log(data);
+
+                var info = utils.parseSafely(data)[0] || {};
+
+                if (info.progress < 100) {
+                    this.onProgress(info.progress);
+
+                } else if (info.progress == 100) {
+                    this.onComplete(info);
+
+                    // clear setTimeout
+                    clearTimeout(this._pollTimeout);
+                    this._pollTimeout = null;
+                }
+                
             }).fail(function() {
                 console.log('Failed to list download for: ' + this._reqId);
             });
         },
+
+        onProgress: function(progress) {
+            console.log('Progress: ' + progress);
+
+            var progressText = progress + '%';
+            this._progressBar.text(progressText);
+            this._progressBar.css({width: progressText});
+        },
+
+        onComplete: function(info) {
+            console.log('Complete: ' + info);
+
+            // force progress to 100
+            this.onProgress(100);
+        }
     };
 
     return Tracker;
