@@ -9,7 +9,7 @@ import utils
 #                     'bot',
 #                     'zh_TW')
 
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, abort
 from flask_sqlalchemy import SQLAlchemy
 from handlers.YTHandler import YTHandler
 from jinja2 import FileSystemLoader
@@ -54,15 +54,20 @@ def index():
 def send_main(path):
     return send_from_directory(DIRECTORY_WEBSITE, path)
 
-@app.route('/new', methods=['GET', 'POST'])
+@app.route('/videos', methods=['POST'])
 def new_download():
     req = YTHandler.parse_args(request, app, db, logWorker)
     return YTHandler.download(req)
 
-@app.route('/list', methods=['GET', 'POST'])
-def list_downloads():
+@app.route('/videos', methods=['GET'])
+def list_all_downloads():
     req = YTHandler.parse_args(request, app, db, logWorker)
     return YTHandler.list_downloads(req)
+
+@app.route('/videos/<int:req_id>', methods=['GET'])
+def list_downloads(req_id):
+    req = YTHandler.parse_args(request, app, db, logWorker)
+    return YTHandler.list_downloads(req, reqId=req_id)
 
 @app.after_request
 def add_header(r):

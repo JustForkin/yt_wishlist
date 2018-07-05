@@ -41,8 +41,8 @@ class YTHandler(object):
         return json.dumps(reqId)
 
     @staticmethod
-    def list_downloads(req):
-        items = YTHandler._list_dl_items(req)
+    def list_downloads(req, reqId=None):
+        items = YTHandler._list_dl_items(req, reqId)
         return json.dumps([item.to_dict() for item in items])
 
     @staticmethod
@@ -113,12 +113,24 @@ class YTHandler(object):
             traceback.print_exc()
 
     @staticmethod
-    def _list_dl_items(req):
+    def _list_dl_items(req, reqId=None):
         '''
         list all DLItems in database
         '''
-        query = req.db.session.query(DLItem)
-        return query.order_by(DLItem.utc_time.desc()).limit(20).all()
+        try:
+            query = None
+            if reqId:
+                query = (req.db.session.query(DLItem)
+                         .filter_by(id=reqId)
+                         )
+            else:
+                query = req.db.session.query(DLItem)
+
+            return query.order_by(DLItem.utc_time.desc()).limit(20).all()
+
+        except exc.SQLAlchemyError:
+            traceback.print_exc()
+            abort(500)
 
 class _Request(object):
     pass
