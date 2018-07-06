@@ -10,12 +10,16 @@ define(function(require) {
     // ------------------------------------------------------------------------
     // CONSTRUCTOR
     // ------------------------------------------------------------------------
-    function Tracker(reqId, containerEl) {
+    function Tracker(reqId, url, title, thumbnailUrl, duration, containerEl) {
         if (!(this instanceof Tracker)) {
             throw new TypeError("Tracker constructor cannot be called as a function.");
         }
 
-        var cardEl = $(_.template(Card)());
+        var info = {'title': title,
+                'url': url,
+                'thumbnailUrl': thumbnailUrl,
+                'duration': duration};
+        var cardEl = $(_.template(Card)(info));
         containerEl.prepend(cardEl);
 
         // hold views

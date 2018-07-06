@@ -6,6 +6,7 @@ define(function(require) {
     var Main = require('text!views/main.html');
     var APIManager = require('APIManager');
     var Tracker = require('Tracker');
+    var utils = require('Utils');
 
     // ------------------------------------------------------------------------
     // CONSTRUCTOR
@@ -19,15 +20,13 @@ define(function(require) {
         var input = mainEl.find('input').first();
         var button = mainEl.find('button').first();
         var resultEl = mainEl.find('.result').first();
-        
-        var that = this;
-        button.click(function() {
-            // start download and add tracker view (use then)
-            APIManager.newDownload(input.val(), that).done(that.onNewSuccess).fail(that.onNewError);
-        });
 
         $('.root').append(mainEl);
+        this._input = input;
+        this._button = button;
         this._resultEl = resultEl;
+
+        this.setup();
     }
 
     // ------------------------------------------------------------------------
@@ -35,9 +34,40 @@ define(function(require) {
     // ------------------------------------------------------------------------
     App.prototype = {
         constructor: App,
+        
+        setup: function() {
+            var that = this;
 
-        addTracker: function(reqId) {
-            new Tracker(reqId, this._resultEl);
+            // handle button click
+            this._button.click(function() {
+                that.onSendText();
+            });
+
+            // handle key press for text area
+            this._input.on("keypress", function(e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    that.onSendText();
+                }
+            });
+        },
+
+        onSendText: function() {
+            // start download and add tracker view (use then)
+            APIManager.newDownload(this._input.val(), this).done(this.onNewSuccess).fail(this.onNewError);
+
+            // clear input
+            this._input.val('');
+        },
+
+        addTracker: function(data) {
+            var info = utils.parseSafely(data) || {};
+            var reqId = info['reqId'] || null;
+            var url = info['url'] || '';
+            var title = info['title'] || '';
+            var thumbnailUrl = info['thumbnail_url'] || '';
+            var duration = info['duration'] || 0;
+            new Tracker(reqId, url, title, thumbnailUrl, duration, this._resultEl);
         },
 
         onNewSuccess: function(data, status) {

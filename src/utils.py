@@ -14,16 +14,10 @@ from threading import Thread
 # see: https://stackoverflow.com/questions/21965484/timeout-for-python-requests-get-entire-response
 TIMEOUT = 10
 
-def check_output(commands):
-    print('cmd:\n')
-    print(commands)
-    import subprocess
-    p = subprocess.Popen(commands, stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    print('out:\n')
-    print(out)
-    print('err:\n')
-    print(err)
+def check_output(cmd):
+    with Popen(cmd, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+        results = [line for line in p.stdout]
+        return results
 
 def send_request(url, method='POST', headers=None, jsonData=None, rawData=None, is_pretty_print=False):
     request = requests.Request(method, url, headers=headers, data=rawData, json=jsonData)
@@ -119,7 +113,5 @@ class TaskExecutor(object):
                 traceback.print_exc()
 
 if __name__ == '__main__':
-    import subprocess
-    cmd = ['./youtube-dl']
-    subprocess.call(cmd)
-#     check_output(cmd)
+    cmd = ['./youtube-dl', 'https://www.youtube.com/watch?v=uAFdeLvT520', '--get-thumbnail']
+    check_output(cmd)

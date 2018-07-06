@@ -30,7 +30,7 @@ class YTHandler(object):
         # check if duplicated, if true, start again or return cached one?
 
         # create ticket
-        YTHandler._get_meta_data(req)
+        title, thumbUrl, duration = YTHandler._get_meta_data(req)
         reqId = YTHandler._add_dl_item(req)
         if reqId is None:
             abort(500)
@@ -39,7 +39,13 @@ class YTHandler(object):
         req.ticketId = reqId
         req.logWorker.addTask(YTHandler._download_impl, (req,), None)
 
-        return json.dumps(reqId)
+        result = {'reqId': reqId,
+                  'url': req.url,
+                  'title': title,
+                  'thumbnail_url': thumbUrl,
+                  'duration': duration}
+
+        return json.dumps(result)
 
     @staticmethod
     def list_downloads(req, reqId=None):
@@ -60,8 +66,13 @@ class YTHandler(object):
 
     @staticmethod
     def _get_meta_data(req):
-        cmd = ['./youtube-dl', req.url, '--get-thumbnail']
-        utils.check_output(cmd)
+        cmd = ['./youtube-dl', req.url, '--get-title', '--get-thumbnail', '--get-duration']
+        results = utils.check_output(cmd)
+        if len(results) != 3:
+            print('fail to get meta data: ' + str(results))
+
+        title, thumbUrl, duration = results
+        return title, thumbUrl, duration
 
     @staticmethod
     def _download_ytdl(req):
