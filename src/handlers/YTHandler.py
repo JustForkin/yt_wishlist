@@ -30,6 +30,7 @@ class YTHandler(object):
         # check if duplicated, if true, start again or return cached one?
 
         # create ticket
+        YTHandler._get_meta_data(req)
         reqId = YTHandler._add_dl_item(req)
         if reqId is None:
             abort(500)
@@ -56,6 +57,41 @@ class YTHandler(object):
 
             YTHandler._on_progress(req, progress)
         YTHandler._on_finished(req, 'path_is_here')
+
+    @staticmethod
+    def _get_meta_data(req):
+        cmd = ['./youtube-dl', req.url, '--get-thumbnail']
+        utils.check_output(cmd)
+
+    @staticmethod
+    def _download_ytdl(req):
+        import subprocess
+        print("Starting download of " + req.url)
+        subprocess.run(["youtube-dl", "-o", "./youtube-dl/.incomplete/%(title)s.%(ext)s", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]", "--exec", "touch {} && mv {} ./youtube-dl/", "--merge-output-format", "mp4", req.url])
+        print("Finished downloading " + req.url)
+
+    @staticmethod
+    def _download_ytdl_p(req):
+        from subprocess import Popen, PIPE, CalledProcessError
+
+        cmd = ['youtube-dl', req.url, '--newline']
+
+        with Popen(cmd, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+            for line in p.stdout:
+                # print(line, end='') # process line here
+                if '[download]' not in line or 'ETA' not in line:
+                    continue
+
+                l = line.strip('[download]')
+                progress, r = l.split('of')
+                total_size, r = r.split('at')
+                speed, eta = r.split('ETA')
+                print('Get progress {0} for size {1} at {2} with ETA {3}'.format(progress, total_size, speed, eta))
+
+            print('download is done')
+
+        if p.returncode != 0:
+            raise CalledProcessError(p.returncode, p.args)
 
     @staticmethod
     def _on_progress(req, progress):

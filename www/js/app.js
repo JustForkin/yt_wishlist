@@ -23,7 +23,7 @@ define(function(require) {
         var that = this;
         button.click(function() {
             // start download and add tracker view (use then)
-            APIManager.newDownload(input.text(), that).done(that.onNewSuccess).fail(that.onNewError);
+            APIManager.newDownload(input.val(), that).done(that.onNewSuccess).fail(that.onNewError);
         });
 
         $('.root').append(mainEl);

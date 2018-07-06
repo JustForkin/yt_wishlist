@@ -3,16 +3,27 @@ import json
 import requests
 import traceback
 
-from flask_talisman import Talisman
 from os import getenv
 from os.path import dirname, realpath, join
 from queue import Queue
 from sqlalchemy import exc
+from subprocess import Popen, PIPE, CalledProcessError
 from threading import Thread
 
 # connection & read timeout
 # see: https://stackoverflow.com/questions/21965484/timeout-for-python-requests-get-entire-response
 TIMEOUT = 10
+
+def check_output(commands):
+    print('cmd:\n')
+    print(commands)
+    import subprocess
+    p = subprocess.Popen(commands, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    print('out:\n')
+    print(out)
+    print('err:\n')
+    print(err)
 
 def send_request(url, method='POST', headers=None, jsonData=None, rawData=None, is_pretty_print=False):
     request = requests.Request(method, url, headers=headers, data=rawData, json=jsonData)
@@ -47,46 +58,6 @@ def parse_json_str_safely(jsonStr, fallback=None):
     except:
         pass
     return retVal
-
-# def get_server_type():
-#     return getenv('SERVER_TYPE', rc.STAGING)
-
-def init_security_headers(app):
-    SELF = "'self'"
-    NONCE_UNDERSCORE = "'nonce-pFaiq1jNjFnimHKY'"
-    # refer to Utils.setVisibility
-    HASH_VISIBLE_SHOW = "'sha256-RidhZOAcgsR2QhhQgGzUqFBYwULc4j8DlDB7y61FgmU='"
-    HASH_VISIBLE_HIDE = "'sha256-Ut79aLjs3fC5UtVv26l2r+kyv/4DhifGEM6YG3xXOyo='"
-    _talisman = Talisman(
-        app,
-        content_security_policy={
-            'default-src': SELF,
-            'frame-src': [
-                SELF,
-                '*.abc-atec.com',
-            ],
-            'img-src': '* data:',
-            'script-src': [
-                SELF,
-                NONCE_UNDERSCORE,
-                'ajax.googleapis.com',
-                'code.getmdl.io',
-            ],
-            'style-src': [
-                SELF,
-                HASH_VISIBLE_SHOW,
-                HASH_VISIBLE_HIDE,
-                'maxcdn.bootstrapcdn.com',
-                'fonts.googleapis.com',
-                'code.getmdl.io',
-            ],
-            'font-src': [
-                SELF,
-                'fonts.gstatic.com',
-            ],
-        },
-        content_security_policy_nonce_in=['script-src'],
-    )
 
 def write_to_db(app, db, entries):
     with app.app_context():
@@ -146,3 +117,9 @@ class TaskExecutor(object):
                 self.resultQueue.put(task)
             except:
                 traceback.print_exc()
+
+if __name__ == '__main__':
+    import subprocess
+    cmd = ['./youtube-dl']
+    subprocess.call(cmd)
+#     check_output(cmd)

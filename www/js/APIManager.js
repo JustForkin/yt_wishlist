@@ -13,9 +13,9 @@ define(function (require) {
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
-    APIManager.newDownload = function(url, context) {
+    APIManager.newDownload = function(videoUrl, context) {
         var url = '/videos';
-        var data = {'url': url};
+        var data = {'url': videoUrl};
 
         return $.ajax({
             url: url,
