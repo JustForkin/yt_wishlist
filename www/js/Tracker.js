@@ -23,8 +23,13 @@ define(function(require) {
         containerEl.prepend(cardEl);
 
         // hold views
-        this._dlButton = cardEl.find('a.btn').first();
+        this._dlButton = cardEl.find('.card-button').first();
         this._progressBar = cardEl.find('.progress-bar').first();
+        this._progress = cardEl.find('.progress').first();
+        this._dlButtonTarget = cardEl.find('.card-button-target').first();
+
+        // initial state
+        this._dlButtonTarget.hide();
 
         // start polling
         this._pollTimeout = this.polling();
@@ -36,8 +41,8 @@ define(function(require) {
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
-    Tracker.MAX_POLL_TIME = 10000;
-    Tracker.POLL_INTERVAL = 500;
+    Tracker.MAX_POLL_TIME = 60000;
+    Tracker.POLL_INTERVAL = 1000;
     
     // ------------------------------------------------------------------------
     // METHODS
@@ -95,6 +100,10 @@ define(function(require) {
 
             // force progress to 100
             this.onProgress(100);
+
+            this._progress.hide();
+            this._dlButtonTarget.show();
+            this._dlButtonTarget.attr("href", '/downloads/' + info.path);
         }
     };
 

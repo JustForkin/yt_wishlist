@@ -37,7 +37,7 @@ class YTHandler(object):
 
         # add to queue
         req.ticketId = reqId
-        req.logWorker.addTask(YTHandler._download_impl, (req,), None)
+        req.logWorker.addTask(YTHandler._download_ytdl_p, (req,), None)
 
         result = {'reqId': reqId,
                   'url': req.url,
@@ -75,17 +75,21 @@ class YTHandler(object):
         return title, thumbUrl, duration
 
     @staticmethod
-    def _download_ytdl(req):
+    def _download_ytdl(url):
         import subprocess
-        print("Starting download of " + req.url)
-        subprocess.run(["youtube-dl", "-o", "./youtube-dl/.incomplete/%(title)s.%(ext)s", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]", "--exec", "touch {} && mv {} ./youtube-dl/", "--merge-output-format", "mp4", req.url])
-        print("Finished downloading " + req.url)
+        print("Starting download of " + url)
+        subprocess.run(["youtube-dl", "-o", "./youtube-dl/.incomplete/%(title)s.%(ext)s", "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]", "--exec", "touch {} && mv {} ./youtube-dl/", "--merge-output-format", "mp4", url])
+        print("Finished downloading " + url)
 
     @staticmethod
     def _download_ytdl_p(req):
         from subprocess import Popen, PIPE, CalledProcessError
 
-        cmd = ['youtube-dl', req.url, '--newline']
+        f_name = '{0}.mp4'.format(req.ticketId)
+        cmd = ["./youtube-dl", "-o", ".incomplete/%(title)s.%(ext)s",
+                "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]",
+                "--exec", "touch {} && mv {} .complete/" + f_name, "--merge-output-format", "mp4",
+                req.url, '--newline']
 
         with Popen(cmd, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
             for line in p.stdout:
@@ -93,21 +97,30 @@ class YTHandler(object):
                 if '[download]' not in line or 'ETA' not in line:
                     continue
 
-                l = line.strip('[download]')
-                progress, r = l.split('of')
-                total_size, r = r.split('at')
-                speed, eta = r.split('ETA')
-                print('Get progress {0} for size {1} at {2} with ETA {3}'.format(progress, total_size, speed, eta))
+                try:
+                    l = line.strip('[download]')
+                    progress, r = l.split('of')
+                    total_size, r = r.split('at')
+                    speed, eta = r.split('ETA')
 
-            print('download is done')
+                    print('Get progress {0} for size {1} at {2} with ETA {3}'.format(progress, total_size, speed, eta))
+                    YTHandler._on_progress(req, YTHandler._convert_progress_text(progress))
+                except:
+                    pass
+
+            YTHandler._on_finished(req, f_name)
 
         if p.returncode != 0:
             raise CalledProcessError(p.returncode, p.args)
 
     @staticmethod
+    def _convert_progress_text(t):
+        return float(t.strip().strip('%'))
+
+    @staticmethod
     def _on_progress(req, progress):
         newDLItem = DLItem(progress=progress).to_dict()
-        print('progress: {0:d}'.format(progress))
+        print('progress: {0}'.format(progress))
         return YTHandler._update_dl_item(req, newDLItem)
 
     @staticmethod
@@ -181,3 +194,10 @@ class YTHandler(object):
 
 class _Request(object):
     pass
+
+if __name__ == '__main__':
+    import os
+    os.chdir('..')
+    print(os.getcwd())
+    url = 'https://www.youtube.com/watch?v=7CVtTOpgSyY'
+    YTHandler._download_ytdl(url)

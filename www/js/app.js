@@ -53,6 +53,8 @@ define(function(require) {
         },
 
         onSendText: function() {
+            this.setProcessing(true);
+            
             // start download and add tracker view (use then)
             APIManager.newDownload(this._input.val(), this).done(this.onNewSuccess).fail(this.onNewError);
 
@@ -71,11 +73,19 @@ define(function(require) {
         },
 
         onNewSuccess: function(data, status) {
+            this.setProcessing(false);
             this.addTracker(data);
         },
 
         onNewError: function(jqXHR, textStatus, errorThrown) {
+            this.setProcessing(false);
             console.log('Failed to start download');
+        },
+
+        setProcessing: function(flag) {
+            this._button.text(flag ? 'Processing...' : 'Download');
+            this._button.prop('disabled', flag);
+            this._input.prop('disabled', flag);
         }
     };
 

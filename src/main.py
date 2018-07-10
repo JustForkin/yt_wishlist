@@ -15,6 +15,7 @@ from handlers.YTHandler import YTHandler
 from jinja2 import FileSystemLoader
 
 DIRECTORY_WEBSITE = '../www'
+DIRECTORY_DOWNLOADED = '../src/.complete'
 
 app = Flask(__name__)
 db = None
@@ -53,6 +54,10 @@ def index():
 @app.route('/<path:path>')
 def send_main(path):
     return send_from_directory(DIRECTORY_WEBSITE, path)
+
+@app.route('/downloads/<path:path>')
+def send_downloaded(path):
+    return send_from_directory(DIRECTORY_DOWNLOADED, path)
 
 @app.route('/videos', methods=['POST'])
 def new_download():

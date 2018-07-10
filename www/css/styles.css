@@ -18,3 +18,8 @@
 .search .result {
 	flex: 1 1 auto;
 }
+
+.search .loader-button {
+	width: 24px;
+    height: 24px;
+}
