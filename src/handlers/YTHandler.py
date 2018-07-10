@@ -1,16 +1,18 @@
 import json
 import utils
 import traceback
+import youtube_dl
 
 from datetime import datetime
 from flask import abort
 from handlers import get_request_json_args
 from models.DLItem import DLItem
+from os.path import splitext
 from sqlalchemy import exc
 
 class YTHandler(object):
     @staticmethod
-    def parse_args(request, app, db, logWorker):
+    def parse_args(request, app, db, logWorker, ydl):
         req = _Request()
 
         if request.method == 'POST':
@@ -22,6 +24,8 @@ class YTHandler(object):
         req.db = db
         req.logWorker = logWorker
         req.url = args.get('url')
+        req.ydl = None
+        req.video_ext = ''
         return req
 
     @staticmethod
@@ -30,14 +34,14 @@ class YTHandler(object):
         # check if duplicated, if true, start again or return cached one?
 
         # create ticket
-        title, thumbUrl, duration = YTHandler._get_meta_data(req)
+        title, thumbUrl, duration = YTHandler._download_meta_impl_ydl(req)
         reqId = YTHandler._add_dl_item(req)
         if reqId is None:
             abort(500)
 
         # add to queue
         req.ticketId = reqId
-        req.logWorker.addTask(YTHandler._download_ytdl_p, (req,), None)
+        req.logWorker.addTask(YTHandler._download_file_impl_ydl, (req,), None)
 
         result = {'reqId': reqId,
                   'url': req.url,
@@ -51,6 +55,50 @@ class YTHandler(object):
     def list_downloads(req, reqId=None):
         items = YTHandler._list_dl_items(req, reqId)
         return json.dumps([item.to_dict() for item in items])
+
+    @staticmethod
+    def _download_meta_impl_ydl(req):
+        ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
+
+        with ydl:
+            result = ydl.extract_info(
+                req.url,
+                download=False # We just want to extract the info
+            )
+
+        if 'entries' in result:
+            # Can be a playlist or a list of videos
+            video = result['entries'][0]
+        else:
+            # Just a video
+            video = result
+
+        return video.get('title', ''), video.get('thumbnail', ''), video.get('duration', '')
+
+    @staticmethod
+    def _download_file_impl_ydl(req):
+        # WORKAROUND: I guess the video output extension
+        # is the same as the converted file
+        def my_hook(d):
+            print(d)
+            if d['status'] == 'downloading':
+                if req.video_ext == '':
+                    req.video_ext = splitext(d['filename'])[1]
+                print('Downloading: ' + d['_percent_str'])
+                YTHandler._on_progress(req, YTHandler._convert_progress_text(d['_percent_str']))
+            elif d['status'] == 'finished':
+                print('Done downloading, now converting ...')
+
+        ydl_opts = {
+            'outtmpl': '.complete/' + str(req.ticketId) + '.%(ext)s',
+            'progress_hooks': [my_hook],
+        }
+
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([req.url])
+
+        f_name = '{0}{1}'.format(req.ticketId, req.video_ext)
+        YTHandler._on_finished(req, f_name)
 
     @staticmethod
     def _download_impl(req):

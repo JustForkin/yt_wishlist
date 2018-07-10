@@ -20,6 +20,7 @@ DIRECTORY_DOWNLOADED = '../src/.complete'
 app = Flask(__name__)
 db = None
 logWorker = None
+ydl = None
 
 @app.before_first_request
 def setup():
@@ -61,17 +62,17 @@ def send_downloaded(path):
 
 @app.route('/videos', methods=['POST'])
 def new_download():
-    req = YTHandler.parse_args(request, app, db, logWorker)
+    req = YTHandler.parse_args(request, app, db, logWorker, ydl)
     return YTHandler.download(req)
 
 @app.route('/videos', methods=['GET'])
 def list_all_downloads():
-    req = YTHandler.parse_args(request, app, db, logWorker)
+    req = YTHandler.parse_args(request, app, db, logWorker, ydl)
     return YTHandler.list_downloads(req)
 
 @app.route('/videos/<int:req_id>', methods=['GET'])
 def list_downloads(req_id):
-    req = YTHandler.parse_args(request, app, db, logWorker)
+    req = YTHandler.parse_args(request, app, db, logWorker, ydl)
     return YTHandler.list_downloads(req, reqId=req_id)
 
 @app.after_request
