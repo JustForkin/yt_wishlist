@@ -12,7 +12,7 @@
 
 .search .input-group {
 	flex: 0 0 auto;
-	width: 50%;
+	width: 100%;
 }
 
 .search .result {
@@ -22,4 +22,8 @@
 .search .loader-button {
 	width: 24px;
     height: 24px;
+}
+
+.card {
+	margin: 10px 8px 10px 8px;
 }
