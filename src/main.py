@@ -34,6 +34,7 @@ def setup():
 def init_database(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///foo.db'
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400
     global db
     db = SQLAlchemy(app)
 
@@ -50,7 +51,10 @@ def init_jinja():
 
 @app.route('/')
 def index():
-    return send_from_directory(DIRECTORY_WEBSITE, 'index.html')
+	# check if modified every time
+    r = send_from_directory(DIRECTORY_WEBSITE, 'index.html')
+    r.cache_control.max_age = 0
+    return r
 
 @app.route('/<path:path>')
 def send_main(path):
@@ -81,8 +85,9 @@ def add_header(r):
     r.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT, DELETE'
     r.headers['Access-Control-Allow-Headers'] = ','.join(['Content-Type'])
     # set no cache policy for confidential data
-    r.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    r.headers['Pragma'] = 'no-cache'
+    if 'Cache-Control' not in r.headers:
+        r.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        r.headers['Pragma'] = 'no-cache'
     return r
 
 if __name__ == '__main__':
