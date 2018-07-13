@@ -63,13 +63,12 @@ define(function(require) {
         },
 
         addTracker: function(data) {
-            var info = utils.parseSafely(data) || {};
-            var reqId = info['reqId'] || null;
-            var url = info['url'] || '';
-            var title = info['title'] || '';
-            var thumbnailUrl = info['thumbnail_url'] || '';
-            var duration = info['duration'] || 0;
-            new Tracker(reqId, url, title, thumbnailUrl, duration, this._resultEl);
+            var infoList = utils.parseSafely(data) || [];
+            for (var num in infoList) {
+                var info = infoList[num];
+                new Tracker(info, this._resultEl);
+            }
+            
         },
 
         onNewSuccess: function(data, status) {

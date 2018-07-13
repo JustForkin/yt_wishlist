@@ -1,10 +1,20 @@
 import youtube_dl
 
-ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
+def my_hook(d):
+    print(d)
+    if d['status'] == 'downloading':
+        print('Downloading: ' + d['_percent_str'])
+    elif d['status'] == 'finished':
+        print('Done downloading, now converting ...')
 
-with ydl:
+ydl_opts = {
+    'outtmpl': '123.%(ext)s',
+    'progress_hooks': [my_hook],
+}
+
+with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     result = ydl.extract_info(
-        'http://www.youtube.com/watch?v=BaW_jenozKc',
+        'https://www.youtube.com/watch?v=TMIrg8E-2Uo&list=PLA43284C6F79AD20C',
         download=False # We just want to extract the info
     )
 
@@ -15,4 +25,4 @@ else:
     # Just a video
     video = result
 
-print(video)
+print(result)

@@ -10,16 +10,24 @@ define(function(require) {
     // ------------------------------------------------------------------------
     // CONSTRUCTOR
     // ------------------------------------------------------------------------
-    function Tracker(reqId, url, title, thumbnailUrl, duration, containerEl) {
+    function Tracker(info, containerEl) {
         if (!(this instanceof Tracker)) {
             throw new TypeError("Tracker constructor cannot be called as a function.");
         }
+        var reqId = info['id'] || null;
+        var url = info['url'] || '';
+        var title = info['title'] || '';
+        var thumbnailUrl = info['thumb_url'] || '';
+        var duration = info['duration'] || 0;
+        var status = info['status'] || '';
+        var progress = info['progress'] || 0;
+        var path = info['path'] || '';
 
-        var info = {'title': title,
+        var template_info = {'title': title,
                 'url': url,
                 'thumbnailUrl': thumbnailUrl,
                 'duration': duration};
-        var cardEl = $(_.template(Card)(info));
+        var cardEl = $(_.template(Card)(template_info));
         containerEl.prepend(cardEl);
 
         // hold views
@@ -28,14 +36,13 @@ define(function(require) {
         this._progress = cardEl.find('.progress').first();
         this._dlButtonTarget = cardEl.find('.card-button-target').first();
 
-        // initial state
-        this._dlButtonTarget.hide();
+        this._reqId = reqId;
 
-        // start polling
-        this._pollTimeout = this.polling();
+        // polling data
+        this._pollTimeout = null;
         this._accPollTime = 0;
 
-        this._reqId = reqId;
+        this.initialize(status, progress, path);
     }
 
     // ------------------------------------------------------------------------
@@ -49,6 +56,26 @@ define(function(require) {
     // ------------------------------------------------------------------------
     Tracker.prototype = {
         constructor: Tracker,
+
+        initialize: function(status, progress, path) {
+            if (status == 'pending') {
+                this.onPending();
+
+                // start polling
+                this._pollTimeout = this.polling();
+
+            } else if (status == 'downloading') {
+                this.onProgress(progress);
+
+                // start polling
+                this._pollTimeout = this.polling();
+
+            } else if (status == 'finished') {
+                this.onComplete(path);
+            } else if (status == 'failed') {
+                this.onFailed();
+            }
+        },
 
         polling: function() {
             console.log('Polling, accumulated time: ' + this._accPollTime);
@@ -71,11 +98,11 @@ define(function(require) {
 
                 var info = utils.parseSafely(data)[0] || {};
 
-                if (info.progress < 100) {
+                if (info.status == 'downloading' && info.progress < 100) {
                     this.onProgress(info.progress);
 
-                } else if (info.progress == 100) {
-                    this.onComplete(info);
+                } else if (info.status == 'finished' || info.progress == 100) {
+                    this.onComplete(info.path);
 
                     // clear setTimeout
                     clearTimeout(this._pollTimeout);
@@ -87,24 +114,37 @@ define(function(require) {
             });
         },
 
+        onPending: function() {
+            this._progress.show();
+            this._dlButtonTarget.hide();
+            this._progressBar.text('');
+            this._progressBar.css({width: '100%'});
+            this._progressBar.addClass('progress-bar-striped progress-bar-animated');
+        },
+
         onProgress: function(progress) {
             console.log('Progress: ' + progress);
 
             var progressText = progress + '%';
+            this._progress.show();
+            this._dlButtonTarget.hide();
             this._progressBar.text(progressText);
             this._progressBar.css({width: progressText});
+            this._progressBar.removeClass('progress-bar-striped progress-bar-animated');
         },
 
-        onComplete: function(info) {
-            console.log('Complete: ' + info);
-
+        onComplete: function(path) {
             // force progress to 100
             this.onProgress(100);
 
             this._progress.hide();
             this._dlButtonTarget.show();
-            this._dlButtonTarget.attr("href", '/downloads/' + info.path);
-        }
+            this._dlButtonTarget.attr("href", '/downloads/' + path);
+        },
+
+        onFailed: function() {
+
+        },
     };
 
     return Tracker;
